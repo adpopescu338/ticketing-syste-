@@ -4,8 +4,8 @@ $custom_message_delay = 5;
 $data = json_decode(file_get_contents('queue.json'));
 $now = time();
 
-if (count($data->past) > 3) {
-    $data->past = array_slice($data->past, 0, 3);
+if (count($data->past) > 6) {
+    $data->past = array_slice($data->past, 0, 6);
 }
 
 for ($x = 0; $x < count($data->incoming); $x++) {
@@ -55,8 +55,8 @@ function load_next($data)
         $data->current->number = $data->number + 1;
         $data->number++;
     }
-    if (count($data->past) > 3) {
-        $data->past = array_slice($data->past, 0, 3);
+    if (count($data->past) > 6) {
+        $data->past = array_slice($data->past, 0, 6);
     }
     array_shift($data->incoming);
     echo json_encode($data);

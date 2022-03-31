@@ -13,5 +13,6 @@
 	"fetch_interval": "1",
 	"borders": true,
 	"delay": "10",
-	"audio_borders": true
+	"audio_borders": true,
+   "number_of_small_divs": "3"
 }

@@ -14,6 +14,8 @@ body {
    background-color: <?php echo $configs->body_background_color?>;
    text-align: center;
    overflow: hidden;
+   margin: 0;
+   padding: 0;
 }
 
 #content {
@@ -44,7 +46,7 @@ body {
 
 .secondary-div {
    color: <?php echo $configs->text_color?>;
-   width: 32vw;
+   width: calc(<?php echo 100/$configs->number_of_small_divs?>vw - 3px);
    height: <?php echo 98 - $configs->main_height?>vh;
    ;
    text-align: center;

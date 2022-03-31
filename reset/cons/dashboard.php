@@ -31,13 +31,13 @@ body {
    text-align: center;
    font-size: 40px;
    overflow: hidden;
-   padding: 2px;
+   padding: 0;
+   box-sizing: border-box;
 }
 
 #demo-wrap-1-main {
    font-size: 10px;
    display: inline-block;
-   ?>;
 }
 
 #demo-wrap-2 {
@@ -130,6 +130,11 @@ label {
 button {
    cursor: pointer
 }
+
+.small-div {
+   width: <?php echo 100/$configs->number_of_small_divs - 2?>%;
+   height: 100%;
+}
 </style>
 
 <body>
@@ -189,13 +194,19 @@ button {
       <br>
       <label>How many seconds should custom message be displayed by default</label>
       <input type='number' name='custom_message_delay' value='<?php echo $configs->custom_message_delay?>'>
+      <br>
+      <label>Number of secondary boxes (preview unavailable) </label>
+      <input type="number" name="number_of_small_divs" min="1" max="6"
+         value='<?php echo $configs->number_of_small_divs?>'>
 
       <br><br><br>
       <input type='submit'>
    </form>
 
-   <a href="../reset/"><button><h4>Reset everything to default (will erase all numbers and
-         configurations)</h4></button></a>
+   <a href="../reset/"><button>
+         <h4>Reset everything to default (will erase all numbers and
+            configurations)</h4>
+      </button></a>
 
    <div id='demo-wrap'>
       <h3>Preview</h3>
@@ -204,9 +215,11 @@ button {
             <span id='demo-wrap-1-main'></span>
          </div>
          <div id='secondary'>
-            <div class='small-div'></div>
-            <div class='small-div'></div>
-            <div class='small-div'></div>
+            <?php
+            for($i = 0; $i < $configs->number_of_small_divs; $i++){
+               echo "<div class='small-div'><span class='small-span'></span></div>";
+            }
+            ?>
          </div>
 
       </div>
@@ -266,20 +279,7 @@ function injectChangesOnDemo(whichOne, html) {
       }
       div.style.width = '98%'
    } else {
-      var divs = document.getElementsByClassName('small-div')
-      var parent = divs[0].parentElement
-      for (var i = 0; i < divs.length; i++) {
-         var div = divs[i];
-         div.innerHTML = html
-         var font = 5;
-         while (
-            div.offsetWidth < parent.offsetWidth - 5 &&
-            div.offsetHeight < parent.offsetHeight - 5
-         ) {
-            font++;
-            div.style.fontSize = font + 'px'
-         }
-      }
+      resizeSmallDivs(html)
    }
 }
 
@@ -299,6 +299,41 @@ function resizeDemo() {
 
 function editColorBackground(e) {
    document.getElementById('demo-wrap-1').style.backgroundColor = e.target.value
+}
+
+function resizeSmallDivs(html) {
+   var smallDivs = document.getElementsByClassName('small-div');
+   var div = smallDivs[0];
+   var span = div.getElementsByClassName('small-span')[0]
+   if (html) {
+      span.innerHTML = html
+   }
+   var initialFont = 10;
+   var font =  initialFont;
+   while (
+      font < 200 && //if > 200, it went crazy
+      span.offsetWidth < div.offsetWidth - 5 &&
+      span.offsetHeight < div.offsetHeight - 5
+   ) {
+      font += 2;
+      span.style.fontSize = font + 'px'
+   }
+   while (
+      font > 5 && //if < 5, it went crazy
+      span.offsetWidth > div.offsetWidth - 5 &&
+      span.offsetHeight > div.offsetHeight - 5
+   ) {
+      font -= 2;
+      span.style.fontSize = font + 'px'
+   }
+
+   var allSpans = document.getElementsByClassName('small-span')
+   for (var i = font === initialFont ? 0 : 1; i < allSpans.length; i++) {
+      if (html) {
+        allSpans[i].innerHTML = html
+      }
+      allSpans[i].style.fontSize = font + 'px'
+   }
 }
 
 function editColorText(e) {

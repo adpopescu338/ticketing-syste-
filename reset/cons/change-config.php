@@ -73,6 +73,10 @@ if(isset($_GET['borders'])){
     $configs->borders = false;
 }
 
+if(isset($_GET['number_of_small_divs'])){
+    $configs->number_of_small_divs =$_GET['number_of_small_divs'];
+}
+
 file_put_contents('config.json', json_encode($configs));
 
 echo 'Updated! Pentru a vedea schimbările, este necesar să dați refresh la pagina pe care sunt afișate numerele
