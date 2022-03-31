@@ -1,0 +1,11 @@
+{
+	"incoming": [],
+	"current": { "desk": 4, "time": 1643495579, "number": 4 },
+	"past": [
+		{ "desk": 3, "time": 1643495568, "number": 3 },
+		{ "desk": 2, "time": 1643495553, "number": 2 },
+		{ "desk": 1, "time": 1643495541, "number": 1 }
+	],
+	"number": 4,
+	"custom_message": false
+}

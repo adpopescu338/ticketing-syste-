@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Reset ticketing system</title>
+	</head>
+	<style>
+		body {
+			text-align: center;
+			padding-top: 100px;
+		}
+		button {
+			padding: 10px 30px 10px 30px;
+			cursor: pointer;
+		}
+	</style>
+	<body>
+		<button onclick="reset()"><h1>RESET</h1></button>
+		<h2 id="loading"></h2>
+	</body>
+	<script>
+		function reset() {
+			if (confirm('Are you sure?')) {
+				document.getElementById('loading').textContent = 'Resetting ...';
+
+				var xhttp = new XMLHttpRequest();
+				xhttp.onreadystatechange = function () {
+					if (this.readyState == 4) {
+						if (this.status == 200) {
+							setTimeout(function () {
+								document.getElementById('loading').textContent = 'Reset Completed';
+							}, 1000);
+						} else {
+							document.getElementById('loading').textContent = 'An error occured';
+						}
+					}
+				};
+				xhttp.open('GET', 'reset.php');
+				xhttp.send();
+			}
+		}
+	</script>
+</html>

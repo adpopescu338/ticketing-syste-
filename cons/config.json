@@ -1,0 +1,17 @@
+{
+	"body_background_color": "blue",
+	"text_color": "white",
+	"main_height": "65",
+	"custom_messages": ["P\u0103stra\u021bi lini\u0219tea"],
+	"audio": { "active": true, "src": "audio/4.mp3" },
+	"custom_message_div_background_color": "red",
+	"custom_message_div_text_color": "white",
+   "custom_message_delay": "5",
+	"format": "Nr.\u00a0<span id='counter'>100</span><br>La&nbspghi\u0219eul\u00a0<span id='desk'>10</span>",
+	"audio_custom_message": { "active": true, "src": "audio/3.mp3" },
+	"secondary_format": "Nr.\u00a0<span class='counter'>100</span><br>La\u00a0<span class='desk'>10</span>",
+	"fetch_interval": "1",
+	"borders": true,
+	"delay": "10",
+	"audio_borders": true
+}

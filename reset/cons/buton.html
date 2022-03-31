@@ -1,0 +1,194 @@
+﻿<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Buton</title>
+		<style>
+			* {
+				overflow-x: hidden;
+			}
+
+			[disabled] {
+				opacity: 0.5;
+			}
+
+			#nx {
+				font-size: 60px;
+				padding: 10px;
+			}
+
+			#sp {
+				font-size: large;
+			}
+
+			button {
+				font-size: 20px;
+				cursor: pointer;
+				border-radius: 5px;
+				box-shadow: 0 0 2px black;
+			}
+
+			body {
+				text-align: center;
+				padding-top: 10px;
+			}
+
+			button:hover {
+				background-color: rgb(202, 197, 197);
+			}
+
+			iframe {
+				width: 550px;
+				height: 300px;
+				margin: 0 auto;
+				box-shadow: 0 0 3px black;
+				border-radius: 4px;
+			}
+
+			#custom_messages_button {
+				max-width: 300px;
+				position: absolute;
+				left: 5px;
+				top: 15px;
+			}
+			#custom_messages_button button {
+				margin-top: 5px;
+				margin-bottom: 5px;
+				padding-top: 3px;
+				padding-bottom: 3px;
+			}
+
+			#settings {
+				position: absolute;
+				right: 15px;
+				top: 15px;
+			}
+		</style>
+	</head>
+
+	<body onload=" start_fetch()">
+		<a id="settings" href="dashboard.php" target="_blank"><button>Setări</button></a>
+		<button id="nx" onclick="next(this)">Următorul</button> <br />
+		<br />
+		<div id="custom_messages_button">
+			<button onclick="send_custom_message(this.textContent)">Vă rugăm să păstrați liniștea</button>
+			<div>
+				<textarea id="custom_inp" cols="30" rows="7"> </textarea>
+
+				<br />
+				<button onclick='send_custom_message(document.getElementById("custom_inp").value)'>Trimite</button>
+			</div>
+		</div>
+
+		<iframe id="ifr" src="visualizer.php"></iframe>
+
+		<br /><br />
+
+		<span id="sp"
+			><span id="nrepas">Număr ghișeu: 0</span> <br />
+			<br />
+			<button onclick="ch()">Schimbă numărul ghișeului</button>
+			<br />
+			<br />
+			<button onclick="change_number()">Schimbă numărul următor</button>
+			<br />
+			<br />
+			<button onclick="call_specific_number()">Cheamă un număr anume</button>
+		</span>
+	</body>
+	<script>
+		var iframe = document.getElementById('ifr');
+		var id_counter = document.getElementById('counter');
+		var ideskContainer = document.getElementById('desk');
+		var nr;
+		var paused = false;
+		var ghiseu = localStorage.getItem('ghiseu');
+		if (!ghiseu) {
+			ghiseu = parseInt(prompt('nr statie epas'));
+			if (isNaN(ghiseu)) {
+				alert('Invalid number');
+				window.location.reload();
+			}
+		}
+		if (!ghiseu) {
+			alert('este necesar sa introduceti numarul statiei');
+			window.location.reload();
+		} else {
+			localStorage.setItem('ghiseu', ghiseu);
+		}
+
+		document.getElementById('nrepas').innerText = 'Număr ghișeu: ' + ghiseu;
+		document.getElementsByTagName('title')[0].textContent = ghiseu;
+
+		function next(b) {
+			b.disabled = true;
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'next.php?desk=' + ghiseu);
+			xhr.send();
+			setTimeout(function () {
+				b.disabled = false;
+			}, 20000);
+		}
+
+		function ch() {
+			localStorage.clear();
+			window.location.reload();
+		}
+
+		function change_number() {
+			var nr = parseInt(prompt('nr'));
+
+			if ((!nr && nr != 0) || isNaN(nr) || nr > 99 || nr < 1) {
+				alert('Invalid number');
+				return;
+			}
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'set.php?number=' + (nr - 1));
+			xhr.send();
+		}
+
+		function start_fetch() {
+			if ('onvisibilitychange' in document && 'hidden' in document) {
+				document.onvisibilitychange = function () {
+					iframe.contentWindow.paused = document.hidden;
+					if (!document.hidden) {
+						iframe.contentWindow.get_data_from_server();
+					}
+				};
+			} else {
+				window.onfocus = function () {
+					iframe.contentWindow.paused = false;
+					iframe.contentWindow.get_data_from_server();
+				};
+
+				window.onblur = function () {
+					iframe.contentWindow.paused = true;
+				};
+			}
+
+			iframe.contentWindow.get_data_from_server();
+		}
+
+		function call_specific_number() {
+			var nr = parseInt(prompt('nr'));
+
+			if ((!nr && nr != 0) || isNaN(nr) || nr > 99 || nr < 1) {
+				alert('Invalid number');
+				return;
+			}
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'request-specific-number.php?number=' + nr + '&desk=' + ghiseu);
+			xhr.send();
+		}
+
+		function send_custom_message(message) {
+			if (!message) {
+				return;
+			}
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', 'display-custom-message.php?message=' + message);
+			xhr.send();
+		}
+	</script>
+</html>
